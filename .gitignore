@@ -4,4 +4,6 @@
 __pycac*
 *.txt
 
+*.pdf
+!dlc-miniproject-1*
 
