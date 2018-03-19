@@ -2,7 +2,7 @@
 
 ## Set up your own folder
 - Create your folder
-- Copy the file stefano/load_script.py in your folder
+- Copy the file `stefano/load_script.py` in your folder
 
 ## Load the data
 - In your folder create a Python script/notebook
