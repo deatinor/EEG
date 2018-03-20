@@ -14,8 +14,8 @@ def load_dataset(train=True):
     dataset,target=dlc_bci.load('../data',train=train)
 
     new_target=torch.ones(target.shape[0],2)
-    new_target[:,0][target==1]=-1
-    new_target[:,1][target==0]=-1
+    new_target[:,0][target==1]=0
+    new_target[:,1][target==0]=0
     dataset=Variable(dataset)
     target_dataset=Variable(new_target)
 
