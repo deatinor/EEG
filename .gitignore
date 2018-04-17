@@ -3,6 +3,7 @@
 *.swo
 __pycac*
 *.txt
+*.pyc
 
 *.pdf
 !dlc-miniproject-1*

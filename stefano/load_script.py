@@ -10,7 +10,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir)
 import dlc_bci
 
-def load_dataset(train=True):
+def load_dataset(train=True,single_target=False):
     dataset,target=dlc_bci.load('../data',train=train)
 
     new_target=torch.ones(target.shape[0],2)
@@ -18,5 +18,8 @@ def load_dataset(train=True):
     new_target[:,1][target==0]=0
     dataset=Variable(dataset)
     target_dataset=Variable(new_target)
+
+    if single_target:
+        target_dataset=(target_dataset[:,1]>target_dataset[:,0]).type(torch.FloatTensor)
 
     return dataset,target_dataset
