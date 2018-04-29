@@ -10,7 +10,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir)
 import dlc_bci
 
-def load_dataset(train=True,single_target=False):
+def load_dataset(train=True,single_target=True):
     dataset,target=dlc_bci.load('../data',train=train)
 
     new_target=torch.ones(target.shape[0],2)
