@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Framework structure Lowercase letters indicate vectors, capital letters are used for matrices. The loss function L is a scalar, instead. For each component of the networks, x indicate its input, y its output and \040is used for the target label of the final layer. }{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Module class}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Linear layer}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Activation functions}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Loss function}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Sequential class}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.6}{Optimizer}{section.2}% 8
+\BOOKMARK [1][-]{section.3}{Training and testing}{}% 9
+\BOOKMARK [1][-]{section.4}{Dataset}{}% 10
+\BOOKMARK [1][-]{section.5}{The network instance}{}% 11
+\BOOKMARK [1][-]{section.6}{Results}{}% 12

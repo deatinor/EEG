@@ -20,6 +20,25 @@ def load_dataset(train=True,single_target=True):
     target_dataset=Variable(new_target)
 
     if single_target:
-        target_dataset=(target_dataset[:,1]>target_dataset[:,0]).type(torch.FloatTensor)
+        target_dataset=(target_dataset[:,1]>target_dataset[:,0]).type(torch.LongTensor)
 
     return dataset,target_dataset
+
+def load_dataset_1000hz(train=True,single_target=True):
+    dataset,target=dlc_bci.load('../data',train=train,one_khz=True)
+
+
+    downsampled_dataset=[]
+    downsampled_target=[]
+    for i in range(10):
+        indexes=range(i,dataset.shape[2],10)
+        downsampled_dataset.append(dataset[:,:,indexes])
+        downsampled_target.append(target)
+
+    downsampled_dataset=torch.cat(downsampled_dataset)
+    downsampled_target=torch.cat(downsampled_target)
+
+    downsampled_dataset=Variable(downsampled_dataset)
+    downsampled_target=Variable(downsampled_target)
+
+    return downsampled_dataset,downsampled_target
