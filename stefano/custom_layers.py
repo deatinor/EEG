@@ -26,3 +26,18 @@ class MyConv1D:
     @property
     def layers(self):
         return self._layers
+
+class MyConv2D:
+    def __init__(self,input_channels,output_channels,kernel,dropout_rate=0.8,batch_norm=True):
+        self.conv=nn.Conv2d(input_channels,output_channels,kernel)
+        self.relu=nn.ReLU()
+        self.batch_norm=nn.BatchNorm1d(output_channels)
+        self.dropout=nn.Dropout(dropout_rate)
+        if batch_norm:
+            self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
+        else:
+            self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
+    
+    @property
+    def layers(self):
+        return self._layers

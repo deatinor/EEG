@@ -42,6 +42,16 @@ class LayersParams:
     def layers_params(self):
         return self._layers_params
 
+    def __str__(self):
+        return_str='Network:\n\n'
+        for i in self._layers_params:
+            return_str+=str(i)
+            return_str+='\n'
+        return return_str
+
+    def __repr__(self):
+        return str(self)
+
 class TrainParams:
     ''' Parameters used to train the network
     
@@ -92,17 +102,19 @@ class NetworkParams:
         dropout_rate (Bool/int/list)
         batch_norm (Bool/int/list)
         linear_filters (Bool/int/list)
+        conv1D (Bool)
     
     '''
-    def __init__(self,conv_filters=False,conv_kernels=3,dropout_rate=0.8,batch_norm=True,linear_filters=False):
+    def __init__(self,conv_filters=False,conv_kernels=3,dropout_rate=0.8,batch_norm=True,linear_filters=False,conv1D=True):
         self._conv_filters=conv_filters
         self._conv_kernels=conv_kernels
         self._dropout_rate=dropout_rate
         self._batch_norm=batch_norm
         self._linear_filters=linear_filters
+        self._conv1D=conv1D
         
     def params(self):
-        return [self._conv_filters,self._conv_kernels,self._dropout_rate,self._batch_norm,self._linear_filters]
+        return [self._conv_filters,self._conv_kernels,self._dropout_rate,self._batch_norm,self._linear_filters,self._conv1D]
 
 
 class OptimizerParams:
@@ -146,7 +158,6 @@ class Params:
     
     '''
     
-    _input_shape=(28,50)
     
     def __init__(self,network_type,
                  optimizer_type,
@@ -160,7 +171,12 @@ class Params:
         # Set up network
         self._network_type=network_type
         self._network_params=network_params
+        if self.network_params._conv1D:
+            self._input_shape=[28,50]
+        else:
+            self._input_shape=[1,28,50]
         self._layers_params=self.set_up_network_params(*self.network_params.params())        
+        print(self._layers_params)
         self._network=network_type(self._layers_params)
 
         # Set up optimizer
@@ -177,7 +193,7 @@ class Params:
         self._plot=plot
         self._verbose=verbose
         
-    def set_up_network_params(self,conv_filters,conv_kernels,dropout_rate,batch_norm,linear_filters):
+    def set_up_network_params(self,conv_filters,conv_kernels,dropout_rate,batch_norm,linear_filters,conv1D):
         ''' It creates a network of type self._network_type with the given parameters.
         
         Example 1:
@@ -236,24 +252,38 @@ class Params:
         
         # Set up conv_kernel
         self._conv_kernels=self.add_params_sequence(self._num_my_conv_layers,conv_kernels,3)
+        if not conv1D:
+            try:
+                len(self._conv_kernels[0])
+            except:
+                self._conv_kernels=[(x,x) for x in self._conv_kernels]
         
         # Set up dropout
-        self._dropout_rate=self.add_params_sequence(self._num_my_conv_layers,dropout_rate,0.2)
+        self._dropout_rate=self.add_params_sequence(self._num_my_conv_layers,dropout_rate,0)
         
         # Set up batch norm
-        self._batch_norm=self.add_params_sequence(self._num_my_conv_layers,batch_norm,True)
+        self._batch_norm=self.add_params_sequence(self._num_my_conv_layers,batch_norm,False)
         
         
         # Set up linar_layers
-        self._linear_layer_start_filters=int(self._conv_filters[-1]*(self._input_shape[1]-
+        if conv1D:
+            self._linear_layer_start_filters=int(self._conv_filters[-1]*(self._input_shape[1]-
                                         np.sum([(x-1) for x in self._conv_kernels])))
-        print(self._conv_filters[-1])
+        else:
+            # Dimension 0
+            dim0=self._input_shape[1]
+            dim1=self._input_shape[2]
+            for i in self._conv_kernels:
+                dim0-=i[0]-1
+                dim1-=i[1]-1
+            self._linear_layer_start_filters=int(self._conv_filters[-1]*dim0*dim1)
+
         self._linear_filters=[self._linear_layer_start_filters]+\
                         self.add_params_sequence(self._num_linear_layers,linear_filters,False)
         
         self._layer_params_list=[]
         for i in range(self._num_my_conv_layers):
-            self._layer_params_list.append(LayerParams(*self._conv_filters[i:i+2],self._conv_kernels[i],self._dropout_rate[i]))
+            self._layer_params_list.append(LayerParams(*self._conv_filters[i:i+2],self._conv_kernels[i],self._dropout_rate[i],self._batch_norm[i]))
         for i in range(self._num_linear_layers):
             self._layer_params_list.append(LayerParams(*self._linear_filters[i:i+2]))
         
