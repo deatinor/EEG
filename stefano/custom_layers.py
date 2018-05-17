@@ -21,7 +21,7 @@ class MyConv1D:
         if batch_norm:
             self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
         else:
-            self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
+            self._layers=[self.conv,self.relu,self.dropout]
     
     @property
     def layers(self):
@@ -36,7 +36,7 @@ class MyConv2D:
         if batch_norm:
             self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
         else:
-            self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
+            self._layers=[self.conv,self.relu,self.dropout]
     
     @property
     def layers(self):
