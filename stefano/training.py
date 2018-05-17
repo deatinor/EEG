@@ -58,26 +58,32 @@ class ExperimentCrossValidation:
             errors_train.append(experiment._errors_train)
             errors_validation.append(experiment._errors_validation)
         for experiment in self._train_test:
+            if not len(self._kfolds):
+                errors_train.append(experiment._errors_train)
             errors_test.append(experiment._errors_validation)
 
-        global_loss=np.mean(np.array(global_loss),0)
         errors_train=np.mean(np.array(errors_train),0)
-        errors_validation=np.mean(np.array(errors_validation),0)
-        errors_test=np.mean(np.array(errors_test),0)
+        if len(self._kfolds):
+            global_loss=np.mean(np.array(global_loss),0)
+            errors_validation=np.mean(np.array(errors_validation),0)
+        if len(self._train_test):
+            errors_test=np.mean(np.array(errors_test),0)
 
         return global_loss,errors_train,errors_validation,errors_test
 
     def compute_performance(self):
         global_loss,errors_train,errors_validation,errors_test=self.compute_errors()
 
-        error_test_size=errors_test.shape[0]
+        error_test_size=errors_train.shape[0]
         performance_index=int(0.75*error_test_size)
         self._performance_train=np.mean(errors_train[performance_index:])
-        self._performance_validation=np.mean(errors_validation[performance_index:])
-        self._performance_test=np.mean(errors_test[performance_index:])
         print('Performance train:',self.performance_train)
-        print('Performance validation:',self.performance_validation)
-        print('Performance test:',self.performance_test)
+        if len(self._kfolds):
+            self._performance_validation=np.mean(errors_validation[performance_index:])
+            print('Performance validation:',self.performance_validation)
+        if len(self._train_test):
+            self._performance_test=np.mean(errors_test[performance_index:])
+            print('Performance test:',self.performance_test)
 
 
     def plot(self):
@@ -85,8 +91,10 @@ class ExperimentCrossValidation:
 
 
         plt.plot(errors_train,label='Error training')
-        plt.plot(errors_validation,label='Error validation')
-        plt.plot(errors_test,label='Error test')
+        if len(self._kfolds):
+            plt.plot(errors_validation,label='Error validation')
+        if len(self._train_test):
+            plt.plot(errors_test,label='Error test')
         plt.title('Errors train/validation')
         plt.legend()
         plt.show()
@@ -105,7 +113,7 @@ class ExperimentCrossValidation:
 
     @property
     def performance_validation(self):
-        return self._performance_validation
+                return self._performance_validation
 
     @property
     def performance_test(self):
@@ -140,6 +148,10 @@ class Result:
 
     def plot_last(self):
         self._experiments[-1].plot()
+        
+    def compute_errors(self):
+        for experiment in self._experiments:
+            experiment.compute_errors()
 
     @property
     def params(self):
@@ -157,13 +169,15 @@ class CrossValidation:
         self._test_dataset=test_dataset
         self._test_target=test_target
         
-    def __call__(self,params,repetitions=5):
+    def __call__(self,params,repetitions=5,repetitions_test=4,cross_validation=True):
         self._result=Result(params)
         for i in range(repetitions):
             self.result.start(cross_validation=True)
             print('Repetition',i)
-            self.train_validate_network(params,self.result)
-            self.train_test_network(params,self.result)
+            if cross_validation:
+                self.train_validate_network(params,self.result)
+            for j in range(repetitions_test):
+                self.train_test_network(params,self.result)
             
             if params.plot:
                 self.result.plot_last()
