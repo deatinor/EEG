@@ -30,6 +30,9 @@ class ExperimentCrossValidation:
         self._kfolds=[]
         self._train_test=[]
         self._last_experiment=None
+        self._performance_train=0
+        self._performance_validation=0
+        self._performance_test=0
 
     def new_kfold(self):
         self._kfolds.append(Experiment())
@@ -45,7 +48,7 @@ class ExperimentCrossValidation:
     def error_validation_epoch(self,error_validation):
         self._last_experiment.error_validation_epoch(error_validation)
 
-    def plot(self):
+    def compute_errors(self):
         global_loss=[]
         errors_train=[]
         errors_validation=[]
@@ -62,12 +65,51 @@ class ExperimentCrossValidation:
         errors_validation=np.mean(np.array(errors_validation),0)
         errors_test=np.mean(np.array(errors_test),0)
 
+        return global_loss,errors_train,errors_validation,errors_test
+
+    def compute_performance(self):
+        global_loss,errors_train,errors_validation,errors_test=self.compute_errors()
+
+        error_test_size=errors_test.shape[0]
+        performance_index=int(0.75*error_test_size)
+        self._performance_train=np.mean(errors_train[performance_index:])
+        self._performance_validation=np.mean(errors_validation[performance_index:])
+        self._performance_test=np.mean(errors_test[performance_index:])
+        print('Performance train:',self.performance_train)
+        print('Performance validation:',self.performance_validation)
+        print('Performance test:',self.performance_test)
+
+
+    def plot(self):
+        global_loss,errors_train,errors_validation,errors_test=self.compute_errors()
+
+
         plt.plot(errors_train,label='Error training')
         plt.plot(errors_validation,label='Error validation')
         plt.plot(errors_test,label='Error test')
         plt.title('Errors train/validation')
         plt.legend()
         plt.show()
+
+        self.compute_performance()
+
+        #  error_test_size=errors_test.shape[0]
+        #  performance_index=int(0.75*error_test_size)
+        #  print('Performance train:',np.mean(errors_train[performance_index:]))
+        #  print('Performance validation:',np.mean(errors_validation[performance_index:]))
+        #  print('Performance test:',np.mean(errors_test[performance_index:]))
+
+    @property
+    def performance_train(self):
+        return self._performance_train
+
+    @property
+    def performance_validation(self):
+        return self._performance_validation
+
+    @property
+    def performance_test(self):
+        return self._performance_test
 
 class Result:
     def __init__(self,params):
