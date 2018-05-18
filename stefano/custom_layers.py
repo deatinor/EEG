@@ -19,7 +19,7 @@ class MyConv1D:
         self.relu=nn.ReLU()
         self.dropout=nn.Dropout(dropout_rate)
         if batch_norm:
-            self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
+            self._layers=[self.conv,self.batch_norm,self.relu,self.dropout]
         else:
             self._layers=[self.conv,self.relu,self.dropout]
     
@@ -34,7 +34,7 @@ class MyConv2D:
         self.relu=nn.ReLU()
         self.dropout=nn.Dropout(dropout_rate)
         if batch_norm:
-            self._layers=[self.conv,self.relu,self.batch_norm,self.dropout]
+            self._layers=[self.conv,self.batch_norm,self.relu,self.dropout]
         else:
             self._layers=[self.conv,self.relu,self.dropout]
     
