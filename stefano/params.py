@@ -285,7 +285,7 @@ class Params:
                 dim1=(dim1-dilation*(conv-1))/stride
             #print(dim1)
             if self._num_my_conv_layers==0:
-                self._linear_layer_start_filters=np.prod(self._input_shape)
+                self._linear_layer_start_filters=int(np.prod(self._input_shape))
             else:
                 self._linear_layer_start_filters=int(self._conv_filters[-1]*dim1)
         else:
@@ -296,7 +296,7 @@ class Params:
                 dim0=(dim0-dilation*(conv[0]-1))/stride
                 dim1=(dim1-dilation*(conv[1]-1))/stride
             if self._num_my_conv_layers==0:
-                self._linear_layer_start_filters=np.prod(self._input_shape)
+                self._linear_layer_start_filters=int(np.prod(self._input_shape))
             else:
                 self._linear_layer_start_filters=int(self._conv_filters[-1]*dim0*dim1)
 
