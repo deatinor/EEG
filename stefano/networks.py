@@ -20,7 +20,7 @@ class SingleLayer(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(ThreeLayers,self).__init__()
+        super(SingleLayer,self).__init__()
         
         self.params=params
         
@@ -47,7 +47,7 @@ class DoubleLayer(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(ThreeLayers,self).__init__()
+        super(DoubleLayer,self).__init__()
         
         self.params=params
         
