@@ -266,6 +266,7 @@ class CrossValidation:
         out=params.network.forward(validation_dataset)
         output_validation=(out[:,1]>out[:,0]).data.long()
         error_validation=np.sum(list(output_validation.cpu().long()!=target.cpu().long().data))/target.shape[0]
+        #  print(error_validation)
         
         result.error_validation_epoch(error_validation)
         
