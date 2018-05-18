@@ -1,0 +1,14 @@
+To run the code:
+
+python test.py
+
+Parameter to set up in test.py:
+- cuda, to use GPU (faster)
+- add_noise, to load the version of the training dataset augmented
+- run_all_methods, run all the methods tested (slow, GPU advised)
+
+In networks.py you can find all the main networks tested.
+
+
+
+
