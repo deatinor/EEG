@@ -20,10 +20,10 @@ from custom_layers import *
 from training import *
 from networks import *
 
-# Parameters
-cuda=True
+###### Parameters  ######
+cuda=False
 
-# Dataset
+######  Dataset  ######
 train_dataset,train_target=load_script.load_dataset(train=True)
 test_dataset,test_target=load_script.load_dataset(train=False)
 
@@ -33,7 +33,9 @@ train_dataset=(train_dataset-mean)/std
 test_dataset=(test_dataset-mean)/std
 
 
-# Models to train
+######  Models to train  #######
+
+# Three CNN Layers - 2 Linears #
 net_type=ThreeCNNLayers
 optimizer_type=optim.Adam
 criterion_type=nn.CrossEntropyLoss
@@ -47,14 +49,33 @@ train_params=TrainParams(max_epoch=300,mini_batch_size=79)
 three_layers=Params(net_type,optimizer_type,criterion_type,network_params=network_params,
                   optimizer_params=optimizer_params,train_params=train_params,cuda=cuda,
                   plot=False)
+three_layers_label='Three CNN Layers - 2 Linears'
+model1=(three_layers,three_layers_label)
+
+# Two CNN Layers - 2 Linears #
+net_type=DoubleCNNLayers
+optimizer_type=optim.Adam
+criterion_type=nn.CrossEntropyLoss
+network_params=NetworkParams(conv_filters=[28,28],conv_kernels=[3,3],
+                             linear_filters=[200,2],
+                             dropout_rate=[0.8,0.8],batch_norm=True,conv1D=True)
+optimizer_params=OptimizerParams()
+train_params=TrainParams(max_epoch=300,mini_batch_size=79)
 
 
-models=[three_layers]
+two_layers=Params(net_type,optimizer_type,criterion_type,network_params=network_params,
+                  optimizer_params=optimizer_params,train_params=train_params,cuda=cuda,
+                  plot=False)
+two_layers_label='Two CNN Layers - 2 Linears'
+model2=(two_layers,two_layers_label)
+
+# Declaring the list with all the models
+models=[model1,model2]
 
 
-# Training all the models
-for model in models:
-    print("\n\nTraining with the following network:\n")
+#######  Training all the models  #######
+for model,label in models:
+    print("\n\nTraining with:",label,'\n')
     cv=CrossValidation(k=4,train_dataset=train_dataset,test_dataset=test_dataset,
                    train_target=train_target,test_target=test_target,cuda=cuda)
     cv(model,repetitions=1,cross_validation=False,repetitions_test=4)

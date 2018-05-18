@@ -14,6 +14,36 @@ from result import *
 from tqdm import tqdm
 
 class CrossValidation:
+    ''' Main class for training a network and for tuning the parameters.
+
+    It can perform the cross validation and/or training the network on the 
+    full training dataset.
+
+    #####
+    Usage example:
+    cv=CrossValidation(k=4,train_dataset=train_dataset,test_dataset=test_dataset,
+                   train_target=train_target,test_target=test_target,cuda=True)
+
+    net_type=ThreeCNNLayers
+    optimizer_type=optim.Adam
+    criterion_type=nn.CrossEntropyLoss
+    network_params=NetworkParams(conv_filters=[14,28,42],conv_kernels=[3,3,3],
+                                 linear_filters=[200,2],
+                                 dropout_rate=dropout,batch_norm=True,conv1D=True)
+    optimizer_params=OptimizerParams()
+    train_params=TrainParams(max_epoch=300,mini_batch_size=79)
+
+
+    params=Params(net_type,optimizer_type,criterion_type,network_params=network_params,
+                  optimizer_params=optimizer_params,train_params=train_params,cuda=True,plot=False)
+
+    cv(params,repetitions=1,cross_validation=True,repetitions_test=4)
+    #####
+
+
+
+
+    '''
     
     def __init__(self,train_dataset,test_dataset,train_target,test_target,k=4,cuda=False):
         self._k=k
@@ -25,6 +55,16 @@ class CrossValidation:
         self._cuda=cuda
         
     def __call__(self,params,repetitions=5,repetitions_test=4,cross_validation=True):
+        ''' Function that executes the cross validation/training
+
+        @args:
+        - params: an instance of Params
+        - repetitions: number of time to repeat the full cross validation
+        - repetitions_test: average the training testing on multiple repetitions. Useful to reduce the noise
+        - cross_validation: wheter to perform the cross validation
+
+
+        '''
         print(params.network)
         self._result=Result(params)
         for i in range(repetitions):

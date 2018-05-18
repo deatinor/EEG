@@ -157,6 +157,7 @@ class Params:
         newtork_params (NetworkParams)
         optimizer_params (OptimizerParams)
         train_params (TrainParams)
+        cuda (Bool)
         plot (Bool)
         verbose (Bool)
     

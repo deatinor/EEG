@@ -86,18 +86,20 @@ class ExperimentCrossValidation:
         return global_loss,errors_train,errors_validation,errors_test
 
     def compute_performance(self):
+        ''' The performance is defined as the mean error in the last 25% iterations
+        '''
         global_loss,errors_train,errors_validation,errors_test=self.compute_errors()
 
         error_test_size=errors_train.shape[0]
         performance_index=int(0.75*error_test_size)
         self._performance_train=np.mean(errors_train[performance_index:])
-        print('Performance train:',self.performance_train)
+        print('Error train:',self.performance_train)
         if len(self._kfolds):
             self._performance_validation=np.mean(errors_validation[performance_index:])
-            print('Performance validation:',self.performance_validation)
+            print('Error validation:',self.performance_validation)
         if len(self._train_test):
             self._performance_test=np.mean(errors_test[performance_index:])
-            print('Performance test:',self.performance_test)
+            print('Error test:',self.performance_test)
 
 
     def plot(self):
@@ -117,12 +119,6 @@ class ExperimentCrossValidation:
 
         self.compute_performance()
 
-        #  error_test_size=errors_test.shape[0]
-        #  performance_index=int(0.75*error_test_size)
-        #  print('Performance train:',np.mean(errors_train[performance_index:]))
-        #  print('Performance validation:',np.mean(errors_validation[performance_index:]))
-        #  print('Performance test:',np.mean(errors_test[performance_index:]))
-
     @property
     def performance_train(self):
         return self._performance_train
@@ -136,6 +132,8 @@ class ExperimentCrossValidation:
         return self._performance_test
 
 class Result:
+    ''' Class that keeps track of a collection of experiments.
+    '''
     def __init__(self,params):
         self._experiments=[]
 
