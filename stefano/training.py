@@ -147,6 +147,9 @@ class Result:
 
     def plot_last(self):
         self._experiments[-1].plot()
+
+    def print_performance_last(self):
+        self._experiments[-1].compute_performance()
         
     def compute_errors(self):
         for experiment in self._experiments:
@@ -182,6 +185,8 @@ class CrossValidation:
             
             if params.plot:
                 self.result.plot_last()
+            else:
+                self.result.print_performance_last()
         
         
     def train_validate_network(self,params,result):
