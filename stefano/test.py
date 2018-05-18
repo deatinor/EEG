@@ -21,7 +21,7 @@ from training import *
 from networks import *
 
 ###### Parameters  ######
-cuda=True
+cuda=False
 add_noise=False
 
 ######  Dataset  ######
