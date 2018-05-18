@@ -121,7 +121,6 @@ class ExperimentCrossValidation:
 
 class Result:
     def __init__(self,params):
-        self._params=params
         self._experiments=[]
 
     def start(self,cross_validation=True):
