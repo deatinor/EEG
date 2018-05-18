@@ -13,8 +13,8 @@ class Tensor3D(nn.Module):
         return input.view(input.shape[0],input.shape[1],-1)
 
 class MyConv1D:
-    def __init__(self,input_channels,output_channels,kernel,dropout_rate=0.8,batch_norm=True):
-        self.conv=nn.Conv1d(input_channels,output_channels,kernel)
+    def __init__(self,input_channels,output_channels,kernel,stride,dropout_rate=0.8,batch_norm=True):
+        self.conv=nn.Conv1d(input_channels,output_channels,kernel,stride=stride)
         self.batch_norm=nn.BatchNorm1d(output_channels)
         self.relu=nn.ReLU()
         self.dropout=nn.Dropout(dropout_rate)
