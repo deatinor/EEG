@@ -164,3 +164,44 @@ class TenCNNLayers(nn.Module):
         x=self.sequential(x)
         
         return x
+
+class FullConnect(nn.Module):
+    num_my_conv_layers=0
+    num_linear_layers=4
+    def __init__(self,params):
+        super(FullConnect,self).__init__()
+        self.dropouts=[0.8,0.8,0.8,0]
+        self.params=params
+        layers=[]
+        layers.append(Flatten())
+        for i in range(self.num_linear_layers):
+            layers.append(nn.Linear(*self.params[self.num_my_conv_layers+i]))
+            layers.append(nn.BatchNorm1d(self.params[self.num_my_conv_layers+i][1]))
+            layers.append(nn.ReLU())
+            layers.append(nn.Dropout(self.dropouts[i]))
+        
+        self.sequential=nn.Sequential(*layers)
+        
+    def forward(self,x):
+        x=self.sequential(x)
+        
+        return x
+
+class FullConv(nn.Module):
+    num_my_conv_layers=4
+    num_linear_layers=0
+    def __init__(self,params):
+        super(FullConv,self).__init__()
+        
+        self.params=params
+        layers=[]
+        for i in range(self.num_my_conv_layers):
+            layers+=MyConv1D(*self.params[i]).layers
+        
+        layers.append(Flatten())
+        self.sequential=nn.Sequential(*layers)
+        
+    def forward(self,x):
+        x=self.sequential(x)
+        
+        return x
