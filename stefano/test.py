@@ -81,9 +81,9 @@ train_params=TrainParams(max_epoch=1500,mini_batch_size=2*79)
 
 
 full_conv=Params(net_type,optimizer_type,criterion_type,network_params=network_params,\
-              optimizer_params=optimizer_params,train_params=train_params, cuda=True)
+              optimizer_params=optimizer_params,train_params=train_params, cuda=cuda, plot=False)
 full_conv_label='Four CNN Layers - Fully Convolutional Network'
-model2=(full_conv,full_conv_label)
+model3=(full_conv,full_conv_label)
 
 # Fully connected network - 4 linear layers
 net_type=FullConnect
@@ -94,9 +94,9 @@ optimizer_params=OptimizerParams()
 train_params=TrainParams(max_epoch=1000,mini_batch_size=79*2)
 
 full_conn=Params(net_type,optimizer_type,criterion_type,network_params=network_params,\
-              optimizer_params=optimizer_params,train_params=train_params,cuda=True)
+              optimizer_params=optimizer_params,train_params=train_params,cuda=cuda,plot=False)
 full_conn_label='Four Linear Layers - Fully Connected Network'
-model4=(full_conn,full_conn_label
+model4=(full_conn,full_conn_label)
 
 # Declaring the list with all the models
 models=[model1,model2,model3,model4]
@@ -107,4 +107,4 @@ for model,label in models:
     print("\n\nTraining with:",label,'\n')
     cv=CrossValidation(k=4,train_dataset=train_dataset,test_dataset=test_dataset,
                    train_target=train_target,test_target=test_target,cuda=cuda)
-    cv(model,repetitions=1,cross_validation=False,repetitions_test=4)
+    cv(model,repetitions=1,cross_validation=False,repetitions_test=6)
