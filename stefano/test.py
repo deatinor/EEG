@@ -24,6 +24,12 @@ from networks import *
 cuda=False
 add_noise=False
 
+#########################
+##     IMPORTANT       ##
+# To run all method:    #
+#########################
+run_all_methods=False
+
 ######  Dataset  ######
 train_dataset,train_target=load_script.load_dataset(train=True)
 test_dataset,test_target=load_script.load_dataset(train=False)
@@ -128,7 +134,10 @@ cnn2D_label='Three CNN2D Layers - 3 Linear Layers'
 model5=(cnn2D,cnn2D_label)
 
 # Declaring the list with all the models
-models=[model1,model2,model3,model4,model5]
+if run_all_methods:
+    models=[model1,model2,model3,model4,model5]
+else:
+    models=[model1,model2,model4]
 
 #######  Training all the models  #######
 for model,label in models:
