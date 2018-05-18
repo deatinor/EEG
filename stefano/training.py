@@ -161,13 +161,14 @@ class Result:
 
 class CrossValidation:
     
-    def __init__(self,train_dataset,test_dataset,train_target,test_target,k=4):
+    def __init__(self,train_dataset,test_dataset,train_target,test_target,k=4,cuda=False):
         self._k=k
         self._kfold=KFold(n_splits=self.k,shuffle=True)
         self._train_dataset=train_dataset
         self._train_target=train_target
         self._test_dataset=test_dataset
         self._test_target=test_target
+        self._cuda=cuda
         
     def __call__(self,params,repetitions=5,repetitions_test=4,cross_validation=True):
         self._result=Result(params)
@@ -226,6 +227,10 @@ class CrossValidation:
 
         train_dataset_shuffled=train_dataset[random_permutation]
         target_shuffled=target[random_permutation]
+
+        if self.cuda:
+            train_dataset_shuffled=train_dataset_shuffled.cuda()
+            target_shuffled=target_shuffled.cuda()
         
         
         # Iterate on the dataset
@@ -246,19 +251,28 @@ class CrossValidation:
             params.optimizer.step()
             total_loss+=loss.data[0]
         
-        error_train=np.sum(list(output_target.long()!=target_shuffled.data))/target_shuffled.shape[0]    
+        error_train=np.sum(list(output_target.cpu().long()!=target_shuffled.cpu().long().data))/target_shuffled.shape[0]    
         
         result.error_train_epoch(error_train,total_loss)
     
     
     def validate_epoch(self,params,validation_dataset,target,result):
         params.network.train(False)
+
+        if self.cuda:
+            validation_dataset=validation_dataset.cuda()
+            target=target.cuda()
+
         out=params.network.forward(validation_dataset)
         output_validation=(out[:,1]>out[:,0]).data.long()
-        error_validation=np.sum(list(output_validation!=target.data))/target.shape[0]
+        error_validation=np.sum(list(output_validation.cpu().long()!=target.cpu().long().data))/target.shape[0]
         
         result.error_validation_epoch(error_validation)
         
+    @property
+    def cuda(self):
+        return self._cuda
+
     @property
     def k(self):
         return self._k

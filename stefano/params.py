@@ -180,6 +180,7 @@ class Params:
         self._layers_params=self.set_up_network_params(*self.network_params.params())        
         print(self._layers_params)
         self._network=network_type(self._layers_params)
+        self._network.cuda()
 
         # Set up optimizer
         self._optimizer_params=optimizer_params
