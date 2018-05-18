@@ -11,8 +11,6 @@ from torch.optim.lr_scheduler import StepLR
 from sklearn.model_selection import KFold
 from result import *
 
-from tqdm import tqdm
-
 class CrossValidation:
     ''' Main class for training a network and for tuning the parameters.
 

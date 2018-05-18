@@ -12,8 +12,6 @@ from torch.optim.lr_scheduler import StepLR
 from sklearn.model_selection import KFold
 from custom_layers import *
 
-from tqdm import tqdm
-
 '''
 In this file there is a collection of the networks used to solve the classification problem.
 '''

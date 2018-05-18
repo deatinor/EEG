@@ -10,8 +10,6 @@ from torch.optim.lr_scheduler import StepLR
 
 from sklearn.model_selection import KFold
 
-from tqdm import tqdm
-
 ''' Classes to keep track of the results during training.
 '''
 
