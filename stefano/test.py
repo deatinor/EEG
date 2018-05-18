@@ -21,7 +21,7 @@ from training import *
 from networks import *
 
 # Parameters
-cuda=False
+cuda=True
 
 # Dataset
 train_dataset,train_target=load_script.load_dataset(train=True)
@@ -54,6 +54,7 @@ models=[three_layers]
 
 # Training all the models
 for model in models:
+    print("\n\nTraining with the following network:\n")
     cv=CrossValidation(k=4,train_dataset=train_dataset,test_dataset=test_dataset,
                    train_target=train_target,test_target=test_target,cuda=cuda)
     cv(model,repetitions=1,cross_validation=False,repetitions_test=4)
