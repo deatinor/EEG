@@ -21,7 +21,7 @@ from training import *
 from networks import *
 
 ###### Parameters  ######
-cuda=True
+cuda=False
 
 ######  Dataset  ######
 train_dataset,train_target=load_script.load_dataset(train=True)
