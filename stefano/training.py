@@ -94,7 +94,7 @@ class CrossValidation:
             validation=self._train_dataset[validation_indexes]
             validation_target=self._train_target[validation_indexes]
 
-            for epoch in tqdm(range(params.train_params.max_epoch)):
+            for epoch in range(params.train_params.max_epoch):
 
                 self.train_epoch(params,train,train_target,result)
                 self.validate_epoch(params,validation,validation_target,result)
@@ -107,7 +107,7 @@ class CrossValidation:
         for param in params.network.parameters():
             param.data.normal_(0, params.train_params.weights_initialization)
         
-        for epoch in tqdm(range(params.train_params.max_epoch)):
+        for epoch in range(params.train_params.max_epoch):
             self.train_epoch(params,self._train_dataset,self._train_target,result)
             self.validate_epoch(params,self._test_dataset,self._test_target,result)
                 

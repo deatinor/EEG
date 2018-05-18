@@ -85,7 +85,7 @@ full_conv=Params(net_type,optimizer_type,criterion_type,network_params=network_p
 full_conv_label='Four CNN Layers - Fully Convolutional Network'
 model3=(full_conv,full_conv_label)
 
-# Fully connected network - 4 linear layers
+# Fully connected network - 4 linear layers #
 net_type=FullConnect
 optimizer_type=optim.Adam
 criterion_type=nn.CrossEntropyLoss
@@ -98,8 +98,24 @@ full_conn=Params(net_type,optimizer_type,criterion_type,network_params=network_p
 full_conn_label='Four Linear Layers - Fully Connected Network'
 model4=(full_conn,full_conn_label)
 
+# Three CNN 2D layers - 3 linear layers #
+net_type=ThreeLayers2D
+optimizer_type=optim.Adam
+criterion_type=nn.CrossEntropyLoss
+network_params=NetworkParams(conv_filters=[5,10], conv_kernels=[(1,5),(28,3)],
+                             linear_filters=[100, 20, 2],
+                             dropout_rate=0.8,batch_norm=True,conv1D=False)
+optimizer_params=OptimizerParams()
+train_params=TrainParams(max_epoch=1000,mini_batch_size=79*2)
+
+cnn2D=Params(net_type,optimizer_type,criterion_type,network_params=network_params,
+              optimizer_params=optimizer_params,train_params=train_params,cuda=cuda)
+cnn2D_label='Three CNN2D Layers - 3 Linear Layers'
+model5=(cnn2D,cnn2D_label)
+
 # Declaring the list with all the models
-models=[model1,model2,model3,model4]
+models=[model1,model2,model3,model4,model5]
+models=[model5]
 
 
 #######  Training all the models  #######
@@ -107,4 +123,4 @@ for model,label in models:
     print("\n\nTraining with:",label,'\n')
     cv=CrossValidation(k=4,train_dataset=train_dataset,test_dataset=test_dataset,
                    train_target=train_target,test_target=test_target,cuda=cuda)
-    cv(model,repetitions=1,cross_validation=False,repetitions_test=6)
+    cv(model,repetitions=1,cross_validation=False,repetitions_test=4)
