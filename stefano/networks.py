@@ -27,7 +27,7 @@ class SingleCNNLayer(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(SingleLayer,self).__init__()
+        super(SingleCNNLayer,self).__init__()
         
         self.params=params
         
@@ -48,7 +48,7 @@ class SingleCNNLayer(nn.Module):
         
         return x
 
-class DoubleLayer(nn.Module):
+class DoubleCNNLayers(nn.Module):
     ''' 2 CNN layer. 2 linear layers
     '''
     
@@ -56,7 +56,7 @@ class DoubleLayer(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(DoubleLayer,self).__init__()
+        super(DoubleCNNLayers,self).__init__()
         
         self.params=params
         
@@ -78,7 +78,7 @@ class DoubleLayer(nn.Module):
         return x
 
 
-class ThreeLayers(nn.Module):
+class ThreeCNNLayers(nn.Module):
     ''' 3 CNN layer. 2 linear layers
     '''
     
@@ -86,7 +86,7 @@ class ThreeLayers(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(ThreeLayers,self).__init__()
+        super(ThreeCNNLayers,self).__init__()
         
         self.params=params
         
@@ -107,7 +107,7 @@ class ThreeLayers(nn.Module):
         
         return x
 
-class FourLayers(nn.Module):
+class FourCNNLayers(nn.Module):
     ''' 4 CNN layer. 2 linear layers
     '''
     
@@ -115,7 +115,7 @@ class FourLayers(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(FourLayers,self).__init__()
+        super(FourCNNLayers,self).__init__()
         
         self.params=params
         
@@ -136,7 +136,7 @@ class FourLayers(nn.Module):
         
         return x
 
-class TenLayers(nn.Module):
+class TenCNNLayers(nn.Module):
     ''' 10 CNN layer. 2 linear layers
     '''
     
@@ -144,7 +144,7 @@ class TenLayers(nn.Module):
     num_linear_layers=2
     
     def __init__(self,params):
-        super(TenLayers,self).__init__()
+        super(TenCNNLayers,self).__init__()
         
         self.params=params
         
