@@ -168,9 +168,10 @@ class TenCNNLayers(nn.Module):
 class FullConnect(nn.Module):
     num_my_conv_layers=0
     num_linear_layers=4
+    
     def __init__(self,params):
         super(FullConnect,self).__init__()
-        self.dropouts=[0.8,0.8,0.8,0]
+        self.dropouts=[0.5,0.5,0.5,0]
         self.params=params
         layers=[]
         layers.append(Flatten())
@@ -186,7 +187,7 @@ class FullConnect(nn.Module):
         x=self.sequential(x)
         
         return x
-
+        
 class FullConv(nn.Module):
     num_my_conv_layers=4
     num_linear_layers=0
