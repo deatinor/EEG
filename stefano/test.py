@@ -21,7 +21,7 @@ from training import *
 from networks import *
 
 ###### Parameters  ######
-cuda=False
+cuda=True
 
 ######  Dataset  ######
 train_dataset,train_target=load_script.load_dataset(train=True)
@@ -69,8 +69,37 @@ two_layers=Params(net_type,optimizer_type,criterion_type,network_params=network_
 two_layers_label='Two CNN Layers - 2 Linears'
 model2=(two_layers,two_layers_label)
 
+
+# Fully convolutional network - 4 CNN layers #
+net_type=FullConv
+optimizer_type=optim.Adam
+criterion_type=nn.CrossEntropyLoss
+network_params=NetworkParams(conv_filters=[28,14,7,2],conv_kernels=[5,9,11,20],dropout_rate=[0.8,0.8,0.5,0],\
+                             stride=1,dilation=[3,1,1,1]) 
+optimizer_params=OptimizerParams()
+train_params=TrainParams(max_epoch=1500,mini_batch_size=2*79)
+
+
+full_conv=Params(net_type,optimizer_type,criterion_type,network_params=network_params,\
+              optimizer_params=optimizer_params,train_params=train_params, cuda=True)
+full_conv_label='Four CNN Layers - Fully Convolutional Network'
+model2=(full_conv,full_conv_label)
+
+# Fully connected network - 4 linear layers
+net_type=FullConnect
+optimizer_type=optim.Adam
+criterion_type=nn.CrossEntropyLoss
+network_params=NetworkParams(linear_filters=[500,200,50,2],conv1D=False)
+optimizer_params=OptimizerParams()
+train_params=TrainParams(max_epoch=1000,mini_batch_size=79*2)
+
+full_conn=Params(net_type,optimizer_type,criterion_type,network_params=network_params,\
+              optimizer_params=optimizer_params,train_params=train_params,cuda=True)
+full_conn_label='Four Linear Layers - Fully Connected Network'
+model4=(full_conn,full_conn_label
+
 # Declaring the list with all the models
-models=[model1,model2]
+models=[model1,model2,model3,model4]
 
 
 #######  Training all the models  #######
