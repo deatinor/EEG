@@ -294,8 +294,8 @@ class Params:
             dim0=self._input_shape[1]
             dim1=self._input_shape[2]
             for conv,stride,dilation in zip(self._conv_kernels,self._stride,self._dilation):
-                dim0=(dim0-dilation*(conv-1))/stride
-                dim1=(dim1-dilation*(conv-1))/stride
+                dim0=(dim0-dilation*(conv[0]-1))/stride
+                dim1=(dim1-dilation*(conv[1]-1))/stride
             if self._num_my_conv_layers==0:
                 self._linear_layer_start_filters=int(np.prod(self._input_shape))
             else:
