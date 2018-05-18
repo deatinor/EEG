@@ -21,7 +21,7 @@ from training import *
 from networks import *
 
 ###### Parameters  ######
-cuda=True
+cuda=False
 
 ######  Dataset  ######
 train_dataset,train_target=load_script.load_dataset(train=True)
@@ -109,7 +109,7 @@ optimizer_params=OptimizerParams()
 train_params=TrainParams(max_epoch=1000,mini_batch_size=79*2)
 
 cnn2D=Params(net_type,optimizer_type,criterion_type,network_params=network_params,
-              optimizer_params=optimizer_params,train_params=train_params,cuda=cuda)
+              optimizer_params=optimizer_params,train_params=train_params,cuda=cuda,plot=False)
 cnn2D_label='Three CNN2D Layers - 3 Linear Layers'
 model5=(cnn2D,cnn2D_label)
 
