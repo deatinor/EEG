@@ -105,17 +105,19 @@ class NetworkParams:
         conv1D (Bool)
     
     '''
-    def __init__(self,conv_filters=False,conv_kernels=3,stride=1,dropout_rate=0.8,batch_norm=True,linear_filters=False,conv1D=True):
+    def __init__(self,conv_filters=False,conv_kernels=3,stride=1,dilation=1,dropout_rate=0.8,batch_norm=True,\
+                 linear_filters=False,conv1D=True):
         self._conv_filters=conv_filters
         self._conv_kernels=conv_kernels
         self._stride=stride
+        self._dilation=dilation
         self._dropout_rate=dropout_rate
         self._batch_norm=batch_norm
         self._linear_filters=linear_filters
         self._conv1D=conv1D
         
     def params(self):
-        return [self._conv_filters,self._conv_kernels,self._stride,\
+        return [self._conv_filters,self._conv_kernels,self._stride,self._dilation,\
                 self._dropout_rate,self._batch_norm,self._linear_filters,self._conv1D]
 
 
@@ -179,7 +181,7 @@ class Params:
         else:
             self._input_shape=[1,28,50]
         self._layers_params=self.set_up_network_params(*self.network_params.params())        
-        print(self._layers_params)
+        
         self._network=network_type(self._layers_params)
         if cuda:
             self._network.cuda()
@@ -198,7 +200,7 @@ class Params:
         self._plot=plot
         self._verbose=verbose
         
-    def set_up_network_params(self,conv_filters,conv_kernels,stride,dropout_rate,batch_norm,linear_filters,conv1D):
+    def set_up_network_params(self,conv_filters,conv_kernels,stride,dilation,dropout_rate,batch_norm,linear_filters,conv1D):
         ''' It creates a network of type self._network_type with the given parameters.
         
         Example 1:
@@ -265,6 +267,9 @@ class Params:
 
         # Set up stride
         self._stride=self.add_params_sequence(self._num_my_conv_layers,stride,1)
+        
+        #Set up dilation
+        self._dilation=self.add_params_sequence(self._num_my_conv_layers,dilation,1)
 
         # Set up dropout
         self._dropout_rate=self.add_params_sequence(self._num_my_conv_layers,dropout_rate,0)
@@ -276,18 +281,24 @@ class Params:
         # Set up linar_layers
         if conv1D:
             dim1=self._input_shape[1]
-            for conv,stride in zip(self._conv_kernels,self._stride):
-                dim1=(dim1-conv+1)/stride
-            print(dim1)
-            self._linear_layer_start_filters=int(self._conv_filters[-1]*dim1)
+            for conv,stride,dilation in zip(self._conv_kernels,self._stride,self._dilation):
+                dim1=(dim1-dilation*(conv-1))/stride
+            #print(dim1)
+            if self._num_my_conv_layers==0:
+                self._linear_layer_start_filters=np.prod(self._input_shape)
+            else:
+                self._linear_layer_start_filters=int(self._conv_filters[-1]*dim1)
         else:
             # Dimension 0
             dim0=self._input_shape[1]
             dim1=self._input_shape[2]
-            for conv,stride in zip(self._conv_kernels,self._stride):
-                dim0=(dim0-conv+1)/stride
-                dim1=(dim1-conv+1)/stride
-            self._linear_layer_start_filters=int(self._conv_filters[-1]*dim0*dim1)
+            for conv,stride,dilation in zip(self._conv_kernels,self._stride,self._dilation):
+                dim0=(dim0-dilation*(conv-1))/stride
+                dim1=(dim1-dilation*(conv-1))/stride
+            if self._num_my_conv_layers==0:
+                self._linear_layer_start_filters=np.prod(self._input_shape)
+            else:
+                self._linear_layer_start_filters=int(self._conv_filters[-1]*dim0*dim1)
 
         self._linear_filters=[self._linear_layer_start_filters]+\
                         self.add_params_sequence(self._num_linear_layers,linear_filters,False)
@@ -295,7 +306,7 @@ class Params:
         self._layer_params_list=[]
         for i in range(self._num_my_conv_layers):
             self._layer_params_list.append(LayerParams(*self._conv_filters[i:i+2],self._conv_kernels[i],\
-                    self._stride[i],self._dropout_rate[i],self._batch_norm[i]))
+                    self._stride[i],self._dilation[i],self._dropout_rate[i],self._batch_norm[i]))
         for i in range(self._num_linear_layers):
             self._layer_params_list.append(LayerParams(*self._linear_filters[i:i+2]))
         

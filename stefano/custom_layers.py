@@ -31,11 +31,12 @@ class MyConv1D:
     - input_channels, output_channels. Input and output channels of the convolutional layer.
     - kernel. Kernel size
     - stride.
+    - dilation.
     - dropout_rate. 0 if no dropout
     - batch_norm. True or False
     '''
-    def __init__(self,input_channels,output_channels,kernel,stride,dropout_rate=0.8,batch_norm=True):
-        self.conv=nn.Conv1d(input_channels,output_channels,kernel,stride=stride)
+    def __init__(self,input_channels,output_channels,kernel,stride,dilation,dropout_rate=0.8,batch_norm=True):
+        self.conv=nn.Conv1d(input_channels,output_channels,kernel,stride=stride,dilation=dilation)
         self.batch_norm=nn.BatchNorm1d(output_channels)
         self.relu=nn.ReLU()
         self.dropout=nn.Dropout(dropout_rate)
@@ -55,11 +56,12 @@ class MyConv2D:
     - input_channels, output_channels. Input and output channels of the convolutional layer.
     - kernel. Kernel size
     - stride.
+    - dilation.
     - dropout_rate. 0 if no dropout
     - batch_norm. True or False
     '''
-    def __init__(self,input_channels,output_channels,kernel,dropout_rate=0.8,batch_norm=True):
-        self.conv=nn.Conv2d(input_channels,output_channels,kernel)
+    def __init__(self,input_channels,output_channels,kernel,stride,dilation,dropout_rate=0.8,batch_norm=True):
+        self.conv=nn.Conv2d(input_channels,output_channels,kernel,stride=stride,dilation=dilation)
         self.batch_norm=nn.BatchNorm2d(output_channels)
         self.relu=nn.ReLU()
         self.dropout=nn.Dropout(dropout_rate)
