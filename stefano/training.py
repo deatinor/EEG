@@ -170,6 +170,7 @@ class CrossValidation:
         self._cuda=cuda
         
     def __call__(self,params,repetitions=5,repetitions_test=4,cross_validation=True):
+        print(params.network)
         self._result=Result(params)
         for i in range(repetitions):
             self.result.start(cross_validation=True)

@@ -179,7 +179,6 @@ class Params:
         else:
             self._input_shape=[1,28,50]
         self._layers_params=self.set_up_network_params(*self.network_params.params())        
-        print(self._layers_params)
         self._network=network_type(self._layers_params)
         if cuda:
             self._network.cuda()
@@ -278,7 +277,6 @@ class Params:
             dim1=self._input_shape[1]
             for conv,stride in zip(self._conv_kernels,self._stride):
                 dim1=(dim1-conv+1)/stride
-            print(dim1)
             self._linear_layer_start_filters=int(self._conv_filters[-1]*dim1)
         else:
             # Dimension 0
