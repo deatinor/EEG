@@ -95,3 +95,30 @@ class ThreeLayers(nn.Module):
         x=self.sequential(x)
         
         return x
+
+class FourLayers(nn.Module):
+    
+    num_my_conv_layers=4
+    num_linear_layers=2
+    
+    def __init__(self,params):
+        super(FourLayers,self).__init__()
+        
+        self.params=params
+        
+        layers=[]
+        for i in range(self.num_my_conv_layers): 
+            layers+=MyConv1D(*self.params[i]).layers
+        
+        layers.append(Flatten())
+        layers.append(nn.Linear(*self.params[self.num_my_conv_layers]))
+        layers.append(nn.ReLU())
+        
+        layers.append(nn.Linear(*self.params[self.num_my_conv_layers+1]))
+        
+        self.sequential=nn.Sequential(*layers)
+        
+    def forward(self,x):
+        x=self.sequential(x)
+        
+        return x
