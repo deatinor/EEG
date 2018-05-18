@@ -246,7 +246,7 @@ class CrossValidation:
             params.optimizer.step()
             total_loss+=loss.data[0]
         
-        error_train=np.sum(list(output_target.long()==target_shuffled.data))/target_shuffled.shape[0]    
+        error_train=np.sum(list(output_target.long()!=target_shuffled.data))/target_shuffled.shape[0]    
         
         result.error_train_epoch(error_train,total_loss)
     
@@ -255,7 +255,7 @@ class CrossValidation:
         params.network.train(False)
         out=params.network.forward(validation_dataset)
         output_validation=(out[:,1]>out[:,0]).data.long()
-        error_validation=np.sum(list(output_validation==target.data))/target.shape[0]
+        error_validation=np.sum(list(output_validation!=target.data))/target.shape[0]
         
         result.error_validation_epoch(error_validation)
         
