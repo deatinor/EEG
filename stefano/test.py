@@ -21,12 +21,26 @@ from training import *
 from networks import *
 
 ###### Parameters  ######
-cuda=False
+cuda=True
+add_noise=False
 
 ######  Dataset  ######
 train_dataset,train_target=load_script.load_dataset(train=True)
 test_dataset,test_target=load_script.load_dataset(train=False)
 
+# Add noise
+if add_noise:
+    train_ds = []
+    train_ds.append(train_dataset.data.numpy())
+    for i in range(4):
+        train_ds.append(train_ds[0] + np.random.normal(scale = 0.5, size = train_ds[0].shape))
+
+    train_ds = np.asarray(train_ds).reshape(316 * 5, 28, 50)
+
+    train_dataset = Variable(torch.FloatTensor(train_ds))
+    train_target = Variable(torch.LongTensor(np.tile(train_target.data.numpy().T, 5).T)) 
+
+# Normalize
 mean=train_dataset.mean(0).view(1,28,50)
 std=train_dataset.std(0).view(1,28,50)
 train_dataset=(train_dataset-mean)/std
@@ -115,8 +129,6 @@ model5=(cnn2D,cnn2D_label)
 
 # Declaring the list with all the models
 models=[model1,model2,model3,model4,model5]
-models=[model5]
-
 
 #######  Training all the models  #######
 for model,label in models:
