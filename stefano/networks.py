@@ -14,7 +14,14 @@ from custom_layers import *
 
 from tqdm import tqdm
 
-class SingleLayer(nn.Module):
+'''
+In this file there is a collection of the networks used to solve the classification problem.
+'''
+
+
+class SingleCNNLayer(nn.Module):
+    ''' Single CNN layer. 2 linear layers
+    '''
     
     num_my_conv_layers=1
     num_linear_layers=2
@@ -42,6 +49,8 @@ class SingleLayer(nn.Module):
         return x
 
 class DoubleLayer(nn.Module):
+    ''' 2 CNN layer. 2 linear layers
+    '''
     
     num_my_conv_layers=2
     num_linear_layers=2
@@ -70,6 +79,8 @@ class DoubleLayer(nn.Module):
 
 
 class ThreeLayers(nn.Module):
+    ''' 3 CNN layer. 2 linear layers
+    '''
     
     num_my_conv_layers=3
     num_linear_layers=2
@@ -97,12 +108,43 @@ class ThreeLayers(nn.Module):
         return x
 
 class FourLayers(nn.Module):
+    ''' 4 CNN layer. 2 linear layers
+    '''
     
     num_my_conv_layers=4
     num_linear_layers=2
     
     def __init__(self,params):
         super(FourLayers,self).__init__()
+        
+        self.params=params
+        
+        layers=[]
+        for i in range(self.num_my_conv_layers): 
+            layers+=MyConv1D(*self.params[i]).layers
+        
+        layers.append(Flatten())
+        layers.append(nn.Linear(*self.params[self.num_my_conv_layers]))
+        layers.append(nn.ReLU())
+        
+        layers.append(nn.Linear(*self.params[self.num_my_conv_layers+1]))
+        
+        self.sequential=nn.Sequential(*layers)
+        
+    def forward(self,x):
+        x=self.sequential(x)
+        
+        return x
+
+class TenLayers(nn.Module):
+    ''' 10 CNN layer. 2 linear layers
+    '''
+    
+    num_my_conv_layers=10
+    num_linear_layers=2
+    
+    def __init__(self,params):
+        super(TenLayers,self).__init__()
         
         self.params=params
         

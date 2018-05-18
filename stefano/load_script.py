@@ -10,21 +10,23 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0,parentdir)
 import dlc_bci
 
-def load_dataset(train=True,single_target=True):
+def load_dataset(train=True):
+    ''' Return the standard version of the dataset
+    '''
     dataset,target=dlc_bci.load('../data',train=train)
 
-    new_target=torch.ones(target.shape[0],2)
-    new_target[:,0][target==1]=0
-    new_target[:,1][target==0]=0
     dataset=Variable(dataset)
-    target_dataset=Variable(new_target)
-
-    if single_target:
-        target_dataset=(target_dataset[:,1]>target_dataset[:,0]).type(torch.LongTensor)
+    target_dataset=Variable(target)
 
     return dataset,target_dataset
 
-def load_dataset_1000hz(train=True,single_target=True):
+def load_dataset_1000hz(train=True):
+    ''' Return the 1000hz version of the dataset
+
+    The dataset is downsampled. The original size of each sample is 28x500.
+    The dataset that is returned is sampled with dilation 10 and stride 1 from the original dataset.
+    The new size of each sample is 28x50 and there will be 10 times more data.
+    '''
     dataset,target=dlc_bci.load('../data',train=train,one_khz=True)
 
 
